@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
 
     tinycmmc.url = "github:grumbel/tinycmmc";
     tinycmmc.inputs.nixpkgs.follows = "nixpkgs";
@@ -12,7 +12,7 @@
         packages = rec {
           default = curl;
 
-          curl = pkgs.stdenv.mkDerivation {
+          curl-bin = pkgs.stdenv.mkDerivation {
             pname = "curl";
             version = "2.0.22";
 
@@ -40,6 +40,24 @@
               cp -vr include $out/
               cp -vr lib $out/
             '';
+          };
+
+          curl = pkgs.stdenv.mkDerivation {
+            pname = "curl";
+            version = "7.84.0";
+
+            src = pkgs.fetchurl {
+              url = "https://curl.se/download/curl-7.84.0.tar.gz";
+              hash = "sha256-PGiT040FTU43gmcWaFhpiJnp2HJY6P8UGdAgw5U4RTU=";
+            };
+
+            configureFlags = [
+              "--with-openssl"
+            ];
+
+            buildInputs = [
+              pkgs.openssl
+            ];
           };
         };
       }
